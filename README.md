@@ -1,5 +1,5 @@
-# platformerspelTest
-GA platformerspel
+# desertescape
+GA desertescape
 
 ## Run
 
