@@ -1,4 +1,4 @@
-# desertescape
+# ESCAPE OF THE DESERT
 GA desertescape
 
 ## Run
