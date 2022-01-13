@@ -1,12 +1,9 @@
-import random
-import itertools
 from spelet.game import Game
 
 
 def main():
     game = Game()
-    world_data = tuple(itertools.chain(*game.world_data))
-    print(world_data)  # tiles i spelet, det spelaren ser
+    print(game.world_data)  # tiles i spelet, det spelaren ser
     for player_pos in game.run(): #kappe gör så här fast med AI ;)
         if player_pos[0] < 800:
             game.moving_right = True
