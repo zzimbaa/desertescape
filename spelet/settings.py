@@ -23,4 +23,4 @@ class Settings(object):
     HEALPOTION_HEIGHT = 11
     FONT_COLOR = (255, 255, 255)
     MAX_HEALTH = 1
-    PLAY_TIME = 15
+    PLAY_TIME = 5
