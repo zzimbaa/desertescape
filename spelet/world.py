@@ -36,6 +36,11 @@ class World():
                                 row_count * Settings.TILE_SIZE,
                                 f"bilder/cowboytiles/2.png")
                     self.tile_list.append(tile)
+                if cell == 7:
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/5.png")
+                    self.tile_list.append(tile)
                 elif cell == 2:
                     coin = Coin(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE,
@@ -76,7 +81,7 @@ class World():
 
     def draw(self):
         self.screen.fill(Settings.BG_COLOR)
-        cloudbg_img = pygame.image.load(f"bilder/cloud.jpg")
+        cloudbg_img = pygame.image.load(f"bilder/cowboytiles/western.jpg")
         WIDTH = cloudbg_img.get_width()
 
         for i in range(5):
@@ -123,6 +128,7 @@ class World():
             if time_left <= 0:
                 self.game_over = True
                 self.player.health = 0
+                self.screen_scroll = 0
             text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
             self.draw_text (text,
                             self.font,
@@ -141,9 +147,11 @@ class World():
         #kollision med enemies
         if pygame.sprite.spritecollide(self.player, self.movingenemy_group, False):
             self.player.health = 0
+            self.screen_scroll = 0
 
         if pygame.sprite.spritecollide(self.player, self.water_group, False):
             self.player.health = 0
+            self.screen_scroll = 0
 
         if pygame.sprite.spritecollide(self.player, self.finish_group, False):
             self.player.victory = True
