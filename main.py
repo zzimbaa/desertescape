@@ -1,6 +1,6 @@
 import pygame
 from spelet.game import Game, Menu
-from 
+ 
 
 def main():
     game = Game(menu=True)

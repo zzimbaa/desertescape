@@ -14,7 +14,11 @@ class World():
         self.bg_scroll = 0
         self.font = pygame.font.SysFont("Bauhaus 93", 30)
         self.world_data = data
-        self.player = Player(screen, char_type='player', x=300, y=300, scale=0.3, speed=5)
+        self.playerList = []
+        playerA = 2 #Amount of players to create
+        for i in range(playerA):
+            l = Player(screen, char_type='player', x=300, y=300, scale=0.3, speed=5)
+            self.playerList.append(l)
         self._init_world()
 
     def _init_world(self):
@@ -122,7 +126,7 @@ class World():
             time_left = int(self.game_over_time - time.time())
             if time_left <= 0:
                 self.game_over = True
-                self.player.health = 0
+                self.player.health = 0 # GÖR FOR LOOP HÄR
             text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
             self.draw_text (text,
                             self.font,
@@ -131,25 +135,27 @@ class World():
                             20)
 
     def update_player(self):
-        self.player.update_animation()
-        self.player.draw()
+        for player in self.playerList:
+            player.update_animation() # FÖR LOOP HÄR
+            player.draw()
 
-        #kollision med items
-        if pygame.sprite.spritecollide(self.player, self.coin_group, True):
-            self.player.score += 1
+            #kollision med items
+            if pygame.sprite.spritecollide(self.player, self.coin_group, True):
+                self.player.score += 1
 
-        #kollision med enemies
-        if pygame.sprite.spritecollide(self.player, self.movingenemy_group, False):
-            self.player.health = 0
+            #kollision med enemies
+            if pygame.sprite.spritecollide(self.player, self.movingenemy_group, False):
+                self.player.health = 0
 
-        if pygame.sprite.spritecollide(self.player, self.water_group, False):
-            self.player.health = 0
+            if pygame.sprite.spritecollide(self.player, self.water_group, False):
+                self.player.health = 0
 
-        if pygame.sprite.spritecollide(self.player, self.finish_group, False):
-            self.player.victory = True
-            self.player.speed = 0
+            if pygame.sprite.spritecollide(self.player, self.finish_group, False):
+                self.player.victory = True
+                self.player.speed = 0
 
-        if self.player.alive:
-            self.player.update_action()
-            self.screen_scroll = self.player.move(self.tile_list)
-            self.bg_scroll -= self.screen_scroll
+            if self.player.alive:
+                self.player.update_action()
+                self.player.move(self.tile_list)
+                #self.screen_scroll = self.player.move(self.tile_list)
+                #self.bg_scroll -= self.screen_scroll

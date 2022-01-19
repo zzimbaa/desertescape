@@ -59,9 +59,9 @@ class Game():
         pygame.init()
         self._screen = pygame.display.set_mode((Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT))
         self._world = None
-        self.moving_left = None
-        self.moving_right = None
-        self.jumping = None
+        #self.moving_left = None
+        #self.moving_right = None
+        #self.jumping = None
         self.world_data = world1_data
         self.menu_enabled = menu
         self.menu = Menu(self._screen) if menu else None
