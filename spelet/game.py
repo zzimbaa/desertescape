@@ -73,10 +73,10 @@ class Game():
     def victory(self):
         return self._world.victory
     
-    def player_pos(self):
+    def player_pos(self): #Vet inte om detta funkar med flera spelare så du får testa det? Kanske gör om till en player funktion
         return (self._world.player.rect.x + self._world.bg_scroll, self._world.player.rect.y)
 
-    def score(self):
+    def score(self): #Player funktion?
         return self._world.player.score
 
     def run(self, action_fn=None):
@@ -112,10 +112,10 @@ class Game():
                         keep_going = False
 
                 self._world.update_player()
-
-            self._world.player.moving_left = self.moving_left and not self.moving_right
-            self._world.player.moving_right = self.moving_right
-            self._world.player.jump = self.jumping and self._world.player.alive
+            for player in self._world.playerList:
+                self._world.player.moving_left = self.moving_left and not self.moving_right
+                self._world.player.moving_right = self.moving_right
+                self._world.player.jump = self.jumping and self._world.player.alive
 
             yield self.player_pos()
 

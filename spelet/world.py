@@ -73,7 +73,8 @@ class World():
         self.screen.blit(self.image, (x, y))
 
     def reset_world(self):
-        self.player.reset(self.screen, char_type='player', x=300, y=300, scale=1, speed=5)
+        for player in self.playerList:
+            player.reset(self.screen, char_type='player', x=300, y=300, scale=1, speed=5)
         self.screen_scroll = 0
         self.bg_scroll = 0
         self._init_world()
@@ -126,7 +127,9 @@ class World():
             time_left = int(self.game_over_time - time.time())
             if time_left <= 0:
                 self.game_over = True
-                self.player.health = 0 # GÖR FOR LOOP HÄR
+                #self.player.health = 0 # GÖR FOR LOOP HÄR
+                for player in self.playerList:
+                    player.health = 0
             text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
             self.draw_text (text,
                             self.font,
@@ -140,22 +143,22 @@ class World():
             player.draw()
 
             #kollision med items
-            if pygame.sprite.spritecollide(self.player, self.coin_group, True):
+            if pygame.sprite.spritecollide(player, self.coin_group, True):
                 self.player.score += 1
 
             #kollision med enemies
-            if pygame.sprite.spritecollide(self.player, self.movingenemy_group, False):
+            if pygame.sprite.spritecollide(player, self.movingenemy_group, False):
                 self.player.health = 0
 
-            if pygame.sprite.spritecollide(self.player, self.water_group, False):
+            if pygame.sprite.spritecollide(player, self.water_group, False):
                 self.player.health = 0
 
-            if pygame.sprite.spritecollide(self.player, self.finish_group, False):
+            if pygame.sprite.spritecollide(player, self.finish_group, False):
                 self.player.victory = True
                 self.player.speed = 0
 
-            if self.player.alive:
-                self.player.update_action()
-                self.player.move(self.tile_list)
+            if player.alive:
+                player.update_action()
+                player.move(self.tile_list)
                 #self.screen_scroll = self.player.move(self.tile_list)
                 #self.bg_scroll -= self.screen_scroll
