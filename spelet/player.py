@@ -51,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         }
         self.reset(screen, char_type, x, y, scale, speed)
         self.rightSensor = 0
+        self.scroll = 0 #Detta är till för att räkna ut spelarens position
 
     @property
     def health(self):
@@ -68,6 +69,12 @@ class Player(pygame.sprite.Sprite):
             self.speed = 0
             self.update_action()
 
+    def getPos (self, scroll): #Eventuellt kan du ha scrollen här
+        return (self.rect.x + scroll, self.rect.y)
+
+    def getScore (self):
+        return self.score
+        
     def move(self, tile_list):
         dx = 0
         dy = 0 
@@ -192,6 +199,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y = y
         self.move_direction = 1
         self.move_counter = 0
+        
     
     def update(self):
         self.rect.x += self.move_direction

@@ -73,6 +73,7 @@ class Game():
     def victory(self):
         return self._world.victory
     
+    # Den ska vara såhär eftersom scrollen inte kommer förflytta sig direkt.
     def player_pos(self): #Vet inte om detta funkar med flera spelare så du får testa det? Kanske gör om till en player funktion
         return (self._world.player.rect.x + self._world.bg_scroll, self._world.player.rect.y)
 
@@ -112,11 +113,11 @@ class Game():
                         keep_going = False
 
                 self._world.update_player()
-            for player in self._world.playerList:
-                self._world.player.moving_left = self.moving_left and not self.moving_right
-                self._world.player.moving_right = self.moving_right
-                self._world.player.jump = self.jumping and self._world.player.alive
-
-            yield self.player_pos()
+            # for player in self._world.playerList:
+            #     self._world.player.moving_left = self.moving_left and not self.moving_right
+            #     self._world.player.moving_right = self.moving_right
+            #     self._world.player.jump = self.jumping and self._world.player.alive
+            # Tror inte dettta behövs för flera spelare?
+            #yield self.player_pos() Tror detta gör samma sak som return fast lite anorlunda
 
             pygame.display.update()
