@@ -72,7 +72,7 @@ class World():
         self.image = font.render(text, True, text_col)
         self.screen.blit(self.image, (x, y))
 
-    def reset_world(self):
+    def reset_world(self): #Finns ingen poäng med den här för AI eftersom vi bara kommer att starta om hela spelet istället för att reseta världen?
         for player in self.playerList:
             player.reset(self.screen, char_type='player', x=300, y=300, scale=1, speed=5)
         self.screen_scroll = 0
@@ -111,54 +111,62 @@ class World():
             finish.rect[0] += self.screen_scroll
             self.screen.blit(finish.image, finish.rect)
         
-        self.game_over = self.game_over or not self.player.alive
-        self.victory = self.player.victory
+        #self.game_over = self.game_over or not self.player.alive #När en spelare dör är det inte game over
+        #self.victory = self.player.victory #Kommer inte direkt finnas någon victory för spelaren
+        self.game_over = True
+        for player in self.playerList:
+                if not player.alive or not player.victory: #Ifall någon av spelaren inte har dött eller klarat banan så resetar vi inte
+                    self.game_over = False
+        # if not self.victory: Ingenting händer om en spelare vinner
+        #     if not self.game_over:
+        #         self.movingenemy_group.update()
+        #         self.coin_group.draw(self.screen)
+        #         self.healpot_group.draw(self.screen)
+        #         self.movingenemy_group.draw(self.screen)
+        #         self.water_group.draw(self.screen)
+        #     self.finish_group.draw(self.screen)
 
-        if not self.victory:
-            if not self.game_over:
-                self.movingenemy_group.update()
-                self.coin_group.draw(self.screen)
-                self.healpot_group.draw(self.screen)
-                self.movingenemy_group.draw(self.screen)
-                self.water_group.draw(self.screen)
-            self.finish_group.draw(self.screen)
-
-        if not self.game_over and not self.victory:
+        if not self.game_over:
             time_left = int(self.game_over_time - time.time())
             if time_left <= 0:
                 self.game_over = True
                 #self.player.health = 0 # GÖR FOR LOOP HÄR
+                #Tror inte det här behövs eftersom vi bara startar om spelet
                 for player in self.playerList:
                     player.health = 0
-            text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
-            self.draw_text (text,
-                            self.font,
-                            Settings.BG_COLOR,
-                            Settings.TILE_SIZE,
-                            20)
+            #text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
+            #Detta behövs nog inte heller?
+            # self.draw_text (text,
+            #                 self.font,
+            #                 Settings.BG_COLOR,
+            #                 Settings.TILE_SIZE,
+            #                 20)
 
     def update_player(self):
+        furthest_player = None
         for player in self.playerList:
             player.update_animation() # FÖR LOOP HÄR
             player.draw()
 
             #kollision med items
             if pygame.sprite.spritecollide(player, self.coin_group, True):
-                self.player.score += 1
+                player.score += 1
 
             #kollision med enemies
             if pygame.sprite.spritecollide(player, self.movingenemy_group, False):
-                self.player.health = 0
-
+                player.health = 0
+                player.speed = 0#Lade till
             if pygame.sprite.spritecollide(player, self.water_group, False):
-                self.player.health = 0
-
+                player.health = 0
+                player.speed = 0 #Lade till
             if pygame.sprite.spritecollide(player, self.finish_group, False):
-                self.player.victory = True
-                self.player.speed = 0
+                player.victory = True
+                player.speed = 0
 
             if player.alive:
                 player.update_action()
                 player.move(self.tile_list)
-                #self.screen_scroll = self.player.move(self.tile_list)
-                #self.bg_scroll -= self.screen_scroll
+                
+        
+        self.screen_scroll = -1 #self.playerList[0].move(self.tile_list)
+        self.bg_scroll -= self.screen_scroll

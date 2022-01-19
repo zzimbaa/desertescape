@@ -134,7 +134,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += dx + self.screen_scroll
             self.screen_scroll = -1
 
-            return self.screen_scroll
+            #return self.screen_scroll
         
     def update_animation(self):
         # update animation

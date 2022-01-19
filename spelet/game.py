@@ -95,7 +95,7 @@ class Game():
             else:
                 self._world.draw()
 
-                if self._world.game_over:
+                if self._world.game_over: #Behövs nog inte för AI? Jo behövs
                     if self.menu_enabled:
                         self.menu.draw_game_over()
                         if self.menu.restart:
@@ -103,14 +103,15 @@ class Game():
                             self.menu.reset()
                     else:
                         keep_going = False
-                if self._world.victory:
-                    if self.menu_enabled:
-                        self.menu.draw_victory(self._world.player.score)
-                        if self.menu.restart:
-                            self._world.reset_world()
-                            self.menu.reset()
-                    else:
-                        keep_going = False
+
+                # if self._world.victory: #Tror jag får göra om dessa två till en funktion som helt enkelt kollar om alla spelarna är klara
+                #     if self.menu_enabled:
+                #         self.menu.draw_victory(self._world.player.score)
+                #         if self.menu.restart:
+                #             self._world.reset_world()
+                #             self.menu.reset()
+                #     else:
+                #         keep_going = False
 
                 self._world.update_player()
             # for player in self._world.playerList:
@@ -119,5 +120,5 @@ class Game():
             #     self._world.player.jump = self.jumping and self._world.player.alive
             # Tror inte dettta behövs för flera spelare?
             #yield self.player_pos() Tror detta gör samma sak som return fast lite anorlunda
-
+            yield 1
             pygame.display.update()
