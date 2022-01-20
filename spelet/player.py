@@ -51,8 +51,8 @@ class Player(pygame.sprite.Sprite):
         }
         self.reset(screen, char_type, x, y, scale, speed)
         self.rightSensor = 0
-        self.scroll = 0 #Detta är till för att räkna ut spelarens position
-
+        self.scroll = 0 #Detta är till för att räkna ut spelarens position KANSKE KAN TAS BORT
+        self.pos = 0
     @property
     def health(self):
         return self._health
@@ -69,16 +69,16 @@ class Player(pygame.sprite.Sprite):
             self.speed = 0
             self.update_action()
 
-    def getPos (self, scroll): #Eventuellt kan du ha scrollen här
+    def getPos (self, scroll): #Eventuellt kan du ha scrollen här Det ska vara background scroll
         return (self.rect.x + scroll, self.rect.y)
 
     def getScore (self):
         return self.score
         
-    def move(self, tile_list):
+    def move(self, tile_list, scroll):
         dx = 0
         dy = 0 
-        
+        self.speed = 5 #HARDCODAT
         if self.moving_left:
             dx = -self.speed
             self.direction = -1
@@ -108,6 +108,7 @@ class Player(pygame.sprite.Sprite):
             # kollision i x-led
             if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
                 dx = 0
+                self.speed = 0 #Skrolla inte om  han springer in i en vägg 
             #kollision i y-led
             if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
                 # check if below the ground, i.e jumping
@@ -119,23 +120,25 @@ class Player(pygame.sprite.Sprite):
                     dy = tile.rect.top - self.rect.bottom + Settings.CHARACTER_MARGIN_BOTTOM
                     self.vel_y = 0
                     self.in_air = False
-        #if sensortest != 100000:
-        #    print(sensortest) 
-        # rectangle pos
         self.rect.y += dy
-
+        self.pos = self.getPos(scroll) #Uppdaterar spelaren postion
         #update scroll based on player position
+        
+        
         if self.char_type == "player":
             # if self.moving_right and (self.rect.right > Settings.SCREEN_WIDTH - Settings.SCROLL_THRESH):
             #     self.screen_scroll = -dx
             # elif self.moving_left and (self.rect.left < Settings.SCROLL_THRESH):
             #     self.screen_scroll = -dx
             #else:
-            self.rect.x += dx + self.screen_scroll
-            self.screen_scroll = -1
+            
+            #self.screen_scroll = -dx
 
             #return self.screen_scroll
-        
+
+            #if scroll == 0: #Betyder att vi inte behöver ta hänsyn till skrollen
+            
+            self.rect.x += dx + scroll
     def update_animation(self):
         # update animation
         ANIMATION_COOLDOWN = 100

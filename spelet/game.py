@@ -53,7 +53,7 @@ class Menu():
             self.restart = True
 
 
-class Game():
+class Game(): #JAG TROR AI KAN VÄLJA ATT BÅDE GÅ HÖGER OCH VÄNSTER VILKET LEDER TILL ATT SKROLLEN UPPDATERAS KONSTIGT
 
     def __init__(self, menu=False):
         pygame.init()
@@ -114,6 +114,7 @@ class Game():
                 #         keep_going = False
 
                 self._world.update_player()
+                self._world.update_scroll()
             # for player in self._world.playerList:
             #     self._world.player.moving_left = self.moving_left and not self.moving_right
             #     self._world.player.moving_right = self.moving_right
