@@ -53,6 +53,8 @@ class Player(pygame.sprite.Sprite):
         self.rightSensor = 0
         self.scroll = 0 #Detta är till för att räkna ut spelarens position KANSKE KAN TAS BORT
         self.pos = 0
+        self.dx = 0
+        self.wall = False #Används för att veta om en spelare har kolliderat med en vägg
     @property
     def health(self):
         return self._health
@@ -76,14 +78,14 @@ class Player(pygame.sprite.Sprite):
         return self.score
         
     def move(self, tile_list, scroll):
-        dx = 0
+        self.wall = False
+        self.dx = 0
         dy = 0 
-        self.speed = 5 #HARDCODAT
         if self.moving_left:
-            dx = -self.speed
+            self.dx = -self.speed
             self.direction = -1
         if self.moving_right:
-            dx = self.speed
+            self.dx = self.speed
             self.direction = 1
             
         # jump
@@ -106,9 +108,9 @@ class Player(pygame.sprite.Sprite):
                     if distance < self.rightSensor or self.rightSensor == 0:
                         self.rightSensor = distance
             # kollision i x-led
-            if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
-                dx = 0
-                self.speed = 0 #Skrolla inte om  han springer in i en vägg 
+            if tile.rect.colliderect(self.rect.x + self.dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
+                self.dx = 0
+                self.wall = True
             #kollision i y-led
             if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
                 # check if below the ground, i.e jumping
@@ -138,7 +140,7 @@ class Player(pygame.sprite.Sprite):
 
             #if scroll == 0: #Betyder att vi inte behöver ta hänsyn till skrollen
             
-            self.rect.x += dx + scroll
+            self.rect.x += self.dx + scroll
     def update_animation(self):
         # update animation
         ANIMATION_COOLDOWN = 100

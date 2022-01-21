@@ -94,7 +94,7 @@ class Game(): #JAG TROR AI KAN VÄLJA ATT BÅDE GÅ HÖGER OCH VÄNSTER VILKET L
                 self.draw_main_menu = not self.menu.start
             else:
                 self._world.draw()
-
+                
                 if self._world.game_over: #Behövs nog inte för AI? Jo behövs
                     if self.menu_enabled:
                         self.menu.draw_game_over()
@@ -112,9 +112,10 @@ class Game(): #JAG TROR AI KAN VÄLJA ATT BÅDE GÅ HÖGER OCH VÄNSTER VILKET L
                 #             self.menu.reset()
                 #     else:
                 #         keep_going = False
-
-                self._world.update_player()
                 self._world.update_scroll()
+                self._world.update_player()
+                
+                
             # for player in self._world.playerList:
             #     self._world.player.moving_left = self.moving_left and not self.moving_right
             #     self._world.player.moving_right = self.moving_right

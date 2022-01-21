@@ -173,15 +173,22 @@ class World():
         #Hitta spelaren som är längst fram
         furthest_player = max(alive_players, key=lambda x: x.pos)
         #Uppdatera baserat på hur den nya spelaren vill röra sig
-        dx = 0
-        direction = 0
-        if furthest_player.moving_left:
-            dx = -furthest_player.speed
-            direction = -1
-        if furthest_player.moving_right:
-            dx = furthest_player.speed
-            direction = 1
-        self.screen_scroll = -dx
-        self.bg_scroll -= self.screen_scroll
-
+        # dx = 0
+        # direction = 0
+        # if furthest_player.moving_left and not furthest_player.wall:
+        #     dx = -furthest_player.speed
+        #     direction = -1
+        # if furthest_player.moving_right and not furthest_player.wall:
+        #     dx = furthest_player.speed
+        #     direction = 1
+        if furthest_player.wall:
+            if furthest_player.moving_right:
+                self.screen_scroll = -furthest_player.speed
+                self.bg_scroll -= self.screen_scroll
+            elif furthest_player.moving_left:
+                self.screen_scroll = furthest_player.speed
+                self.bg_scroll -= self.screen_scroll
+        else:
+            self.screen_scroll = -furthest_player.dx
+            self.bg_scroll -= self.screen_scroll
     
