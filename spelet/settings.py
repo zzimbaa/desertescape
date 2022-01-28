@@ -16,11 +16,11 @@ class Settings(object):
     FLOOR_Y = 600
     GRAVITY = 0.5
     TILE_SIZE = 60
-    SCROLL_THRESH = 100
+    SCROLL_THRESH = 400
     COIN_WIDTH = 7
     COIN_HEIGHT = 9
     HEALPOTION_WIDTH = 8
     HEALPOTION_HEIGHT = 11
     FONT_COLOR = (255, 255, 255)
     MAX_HEALTH = 1
-    PLAY_TIME = 15
+    PLAY_TIME = 200

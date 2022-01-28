@@ -10,8 +10,8 @@ class Menu():
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.SysFont("Bauhaus 93", 30)
-        self.start_button = Button(screen, Settings.SCREEN_WIDTH // 2 - 350, Settings.SCREEN_HEIGHT // 2, f"bilder/items/start.png")
-        self.exit_button = Button(screen, Settings.SCREEN_WIDTH // 2 + 150, Settings.SCREEN_HEIGHT // 2, f"bilder/items/exit.png")
+        self.start_button = Button(screen, Settings.SCREEN_WIDTH // 2 - 350, Settings.SCREEN_HEIGHT // 2, f"bilder/items/nystart.png")
+        self.exit_button = Button(screen, Settings.SCREEN_WIDTH // 2 + 150, Settings.SCREEN_HEIGHT // 2, f"bilder/items/nyexit.png")
         self.restart_button = Button(screen, Settings.SCREEN_WIDTH // 2, Settings.SCREEN_HEIGHT // 2, f"bilder/items/restart.png")
         self.reset()
 

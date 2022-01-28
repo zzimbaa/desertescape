@@ -32,16 +32,79 @@ class World():
             col_count = 0
             for cell in row:
                 if cell == 1:
+                    #vanlig jord tile med gräs
                     tile = Tile(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE,
                                 f"bilder/cowboytiles/2.png")
                     self.tile_list.append(tile)
-                if cell == 7:
+                elif cell == 7:
+                    #vanlig jord tile
                     tile = Tile(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE,
                                 f"bilder/cowboytiles/5.png")
                     self.tile_list.append(tile)
+                elif cell == 8:
+                    #jordplattform längt åt vänster
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/14.png")
+                    self.tile_list.append(tile)
+                elif cell == 9:
+                    #jordplattform mitten
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/15.png")
+                    self.tile_list.append(tile)
+                elif cell == 10:
+                    #jordplattform längst åt höger
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/16.png")
+                    self.tile_list.append(tile)
+                elif cell == 11:
+                    #jord tile för brantsluttning åt höger
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/13.png")
+                    self.tile_list.append(tile)
+                elif cell == 12:
+                    #vanlig jord tile med gräs och komma upp/ner från vänster
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/1.png")
+                    self.tile_list.append(tile)
+                elif cell == 13:
+                    #vanlig jord tile med gräs och komma upp/ner från höger
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/3.png")
+                    self.tile_list.append(tile)
+                elif cell == 14:
+                    #vanlig jord tile för att binda
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/8.png")
+                    self.tile_list.append(tile)
+                elif cell == 15:
+                    #vanlig jord tile för att binda
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/10.png")
+                    self.tile_list.append(tile)
+                elif cell == 16:
+                    #jordplattform slutning åt vänster
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/4.png")
+                    self.tile_list.append(tile)
+                elif cell == 17:
+                    #jordplattform slutning åt höger
+                    tile = Tile(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE,
+                                f"bilder/cowboytiles/6.png")
+                    self.tile_list.append(tile)
                 elif cell == 2:
+                    #coins
                     coin = Coin(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE,
                                 f"bilder/items/coingold.png")
@@ -52,15 +115,18 @@ class World():
                                            f"bilder/items/healpotionblue.png")
                     self.healpot_group.add(healpot)
                 elif cell == 4:
+                    #fiende
                     movingenemy = Enemy(col_count * Settings.TILE_SIZE + 6,
                                   row_count * Settings.TILE_SIZE + 6)
                     self.movingenemy_group.add(movingenemy)
                 elif cell == 5:
+                    #vatten
                     water = Water(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE,
                                 f"bilder/tiles/water.png")
                     self.water_group.add(water)
                 elif cell == 6:
+                    #mål
                     finish = Finish(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 2),
                                 f"bilder/items/door.png")
