@@ -112,8 +112,8 @@ class Game(): #JAG TROR AI KAN VÄLJA ATT BÅDE GÅ HÖGER OCH VÄNSTER VILKET L
                 #             self.menu.reset()
                 #     else:
                 #         keep_going = False
-                self._world.update_scroll()
                 self._world.update_player()
+                
                 
                 
             # for player in self._world.playerList:

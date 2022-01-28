@@ -77,7 +77,7 @@ class Player(pygame.sprite.Sprite):
     def getScore (self):
         return self.score
         
-    def move(self, tile_list, scroll):
+    def move(self, tile_list):
         self.wall = False
         self.dx = 0
         dy = 0 
@@ -123,11 +123,11 @@ class Player(pygame.sprite.Sprite):
                     self.vel_y = 0
                     self.in_air = False
         self.rect.y += dy
-        self.pos = self.getPos(scroll) #Uppdaterar spelaren postion
+        #self.pos = self.getPos(scroll) #Uppdaterar spelaren postion DEtta kanske ska göras efter rect.x ändras?
         #update scroll based on player position
         
         
-        if self.char_type == "player":
+        #if self.char_type == "player":
             # if self.moving_right and (self.rect.right > Settings.SCREEN_WIDTH - Settings.SCROLL_THRESH):
             #     self.screen_scroll = -dx
             # elif self.moving_left and (self.rect.left < Settings.SCROLL_THRESH):
@@ -140,7 +140,7 @@ class Player(pygame.sprite.Sprite):
 
             #if scroll == 0: #Betyder att vi inte behöver ta hänsyn till skrollen
             
-            self.rect.x += self.dx + scroll
+            #self.rect.x += self.dx + scroll 
     def update_animation(self):
         # update animation
         ANIMATION_COOLDOWN = 100
