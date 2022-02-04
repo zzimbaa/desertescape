@@ -16,7 +16,7 @@ class World():
         self.world_data = data
         self.playerList = []
         self.old_player = None
-        playerA = 2 #Amount of players to create
+        playerA = 1 #Amount of players to create
         for i in range(playerA):
             l = Player(screen, char_type='player', x=300, y=300, scale=0.3, speed=5)
             self.playerList.append(l)
@@ -172,7 +172,6 @@ class World():
         alive_players = [x for x in self.playerList if x.alive]
         #Hitta spelaren som är längst fram
         furthest_player = max(alive_players, key=lambda x: x.pos)
-        print(furthest_player.pos)
         #Kolla om detta är samma spelare som tidigare 
         if furthest_player is self.old_player:
             self.screen_scroll = -furthest_player.dx

@@ -1,50 +1,39 @@
 from spelet.game import Game
-
-from NEAT import population
-from NEAT import config
-from NEAT import connection
-from NEAT import genome
-from NEAT import history
-from NEAT import miscFuncs
-from NEAT import node
-from NEAT import player
-from NEAT import species
+from neat import population
+from neat import config
+from neat import connection
+from neat import genome
+from neat import history
+from neat import miscFuncs
+from neat import node
+from neat import player
+from neat import species
 #from NEAT import miscFuncs
 
-def main(players):
-    print(len(players))
-    for genome in players:
-        #net = neat.nn.FeedForwardNetwork.create(g, config)
-        #nets.append(net)
-        genome.fitness = 0
-        game = Game()
-        xpos_max = 0
-        score = 0
-        for player_pos in game.run():
-            print(game._world.player.rightSensor)
-            # increase fitness for advancing in x position
-            if player_pos[0] > xpos_max:
-                genome.fitness += 1
-                xpos_max = player_pos[0]
 
-            # increase fitness for player score
-            if game.score() > score:
-                genome.fitness += (game.score() - score)
-                score = game.score()
-
-            # Use player position and world map as input
+    
+    
+def main(genomes):
+    hardcodedstart = 270
+    game = Game()
+    world = game._world
+    players = world.playerList
+    for player_pos in game.run():
+        for nr, genome in enumerate(genomes):
+            player = players[nr]
             sensors = {}
-            sensors["1"] = game._world.player.rightSensor
+            sensors["1"] = player.rightSensor
             genome.brain.makeReady()
             outputs = genome.brain.useNetwork(sensors)
-            game.moving_right = outputs[0] > 0.5
-            game.moving_left = outputs[1] > 0.5
-            game.jumping = outputs[2] > 0.5
-            print(outputs)
-    
-    
-    
+            player.moving_right = outputs[0] > 0.5
+            player.moving_left = outputs[1] > 0.5
+            player.jumping = outputs[2] > 0.5
 
+    for nr, genome in enumerate(genomes):
+        player = players[nr]
+        # increase fitness for advancing in x position
+        distance = max((player.rect.centerx - hardcodedstart, 0)) #Ifall skillnaden är negativ blir distance = 0
+        genome.fitness = distance
 
 def run():
     p = population.population()

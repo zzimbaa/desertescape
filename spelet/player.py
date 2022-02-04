@@ -78,7 +78,6 @@ class Player(pygame.sprite.Sprite):
         return self.score
         
     def move(self, tile_list):
-        self.wall = False
         self.dx = 0
         dy = 0 
         if self.moving_left:
@@ -100,12 +99,14 @@ class Player(pygame.sprite.Sprite):
         dy += self.vel_y
 
         # kollision med tiles
+        self.rightSensor = 10000
         for tile in tile_list:
             #Sensor
-            if (tile.rect.y - 50 < self.rect.y) and (self.rect.y < tile.rect.y + 50):
-                if tile.rect.x > self.rect.x: #ifall den är till höger om spelaren
-                    distance = tile.rect.x - self.rect.x
-                    if distance < self.rightSensor or self.rightSensor == 0:
+            if (tile.rect.bottom > self.rect.centery) and (self.rect.centery > tile.rect.top):
+                if tile.rect.centerx > self.rect.centerx: #ifall den är till höger om spelaren
+                    #print(tile.rect.bottom, tile.rect.top, self.rect.centery)
+                    distance = tile.rect.centerx - self.rect.centerx
+                    if distance < self.rightSensor:
                         self.rightSensor = distance
             # kollision i x-led
             if tile.rect.colliderect(self.rect.x + self.dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
