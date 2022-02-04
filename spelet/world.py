@@ -16,9 +16,9 @@ class World():
         self.world_data = data
         self.playerList = []
         self.old_player = None
-        playerA = 1 #Amount of players to create
+        playerA = 50 #Amount of players to create
         for i in range(playerA):
-            l = Player(screen, char_type='player', x=300, y=300, scale=0.3, speed=5)
+            l = Player(screen, char_type='player', x=300, y=500, scale=0.3, speed=5)
             self.playerList.append(l)
         self._init_world()
 
@@ -171,23 +171,24 @@ class World():
         #Ta fram spelarna som lever
         alive_players = [x for x in self.playerList if x.alive]
         #Hitta spelaren som är längst fram
-        furthest_player = max(alive_players, key=lambda x: x.pos)
-        #Kolla om detta är samma spelare som tidigare 
-        if furthest_player is self.old_player:
-            self.screen_scroll = -furthest_player.dx
-            self.bg_scroll -= self.screen_scroll
-            for player in self.playerList: #När vi väl vet hur alla spelare vill flytta sig och vet den spelaren som är längst fram uppdaterar vi allas x position i samband med hur den spelaren längst fram vill ändra skrollen
-                player.rect.x += player.dx + self.screen_scroll
-        else:
-            if not self.old_player == None:
-                distance = furthest_player.pos - self.old_player.pos #Teoretiskt borde detta alltid vara positivt men det kanske finns scenarion där det inte är så
-                #Vi vill nu flytta scrollen som den nya spelaren vill men samtidigt vill vi flytta så den nya spelaren är i center
-                new_scroll = distance + furthest_player.dx
-                self.screen_scroll = -new_scroll
+        if len(alive_players) != 0:
+            furthest_player = max(alive_players, key=lambda x: x.pos)
+            #Kolla om detta är samma spelare som tidigare 
+            if furthest_player is self.old_player:
+                self.screen_scroll = -furthest_player.dx
                 self.bg_scroll -= self.screen_scroll
-        self.old_player = furthest_player
-        for player in self.playerList:
-            player.pos = player.getPos(self.bg_scroll)[0]
+                for player in self.playerList: #När vi väl vet hur alla spelare vill flytta sig och vet den spelaren som är längst fram uppdaterar vi allas x position i samband med hur den spelaren längst fram vill ändra skrollen
+                    player.rect.x += player.dx + self.screen_scroll
+            else:
+                if not self.old_player == None:
+                    distance = furthest_player.pos - self.old_player.pos #Teoretiskt borde detta alltid vara positivt men det kanske finns scenarion där det inte är så
+                    #Vi vill nu flytta scrollen som den nya spelaren vill men samtidigt vill vi flytta så den nya spelaren är i center
+                    new_scroll = distance + furthest_player.dx
+                    self.screen_scroll = -new_scroll
+                    self.bg_scroll -= self.screen_scroll
+            self.old_player = furthest_player
+            for player in self.playerList:
+                player.pos = player.getPos(self.bg_scroll)[0]
             
         
 

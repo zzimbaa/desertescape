@@ -102,7 +102,7 @@ class Player(pygame.sprite.Sprite):
         self.rightSensor = 10000
         for tile in tile_list:
             #Sensor
-            if (tile.rect.bottom > self.rect.centery) and (self.rect.centery > tile.rect.top):
+            if (tile.rect.bottom > self.rect.centery + 20) and (self.rect.centery + 20 > tile.rect.top):
                 if tile.rect.centerx > self.rect.centerx: #ifall den är till höger om spelaren
                     #print(tile.rect.bottom, tile.rect.top, self.rect.centery)
                     distance = tile.rect.centerx - self.rect.centerx

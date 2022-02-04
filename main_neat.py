@@ -1,13 +1,13 @@
 from spelet.game import Game
-from neat import population
-from neat import config
-from neat import connection
-from neat import genome
-from neat import history
-from neat import miscFuncs
-from neat import node
-from neat import player
-from neat import species
+from NEAT import population
+from NEAT import config
+from NEAT import connection
+from NEAT import genome
+from NEAT import history
+from NEAT import miscFuncs
+from NEAT import node
+from NEAT import player
+from NEAT import species
 #from NEAT import miscFuncs
 
 
@@ -16,21 +16,21 @@ from neat import species
 def main(genomes):
     hardcodedstart = 270
     game = Game()
-    world = game._world
-    players = world.playerList
+    #world = game._world
+    #players = world.playerList
     for player_pos in game.run():
         for nr, genome in enumerate(genomes):
-            player = players[nr]
+            player = game._world.playerList[nr]
             sensors = {}
-            sensors["1"] = player.rightSensor
+            sensors["1"] = 1/(player.rightSensor/10)
             genome.brain.makeReady()
             outputs = genome.brain.useNetwork(sensors)
             player.moving_right = outputs[0] > 0.5
             player.moving_left = outputs[1] > 0.5
-            player.jumping = outputs[2] > 0.5
+            player.jump = outputs[2] > 0.5
 
     for nr, genome in enumerate(genomes):
-        player = players[nr]
+        player = game._world.playerList[nr]
         # increase fitness for advancing in x position
         distance = max((player.rect.centerx - hardcodedstart, 0)) #Ifall skillnaden är negativ blir distance = 0
         genome.fitness = distance
