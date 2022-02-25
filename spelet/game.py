@@ -79,9 +79,9 @@ class Game():
     def score(self):
         return self._world.player.score
 
-    def run(self, action_fn=None):
+    def run(self,time,  action_fn=None):
         clock = pygame.time.Clock()
-        self._world = World(self._screen, self.world_data)
+        self._world = World(self._screen, self.world_data, time)
         keep_going = True
         while keep_going:
 

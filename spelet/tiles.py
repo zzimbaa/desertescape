@@ -9,6 +9,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.img.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.og = x
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self, x, y, img_path):
@@ -17,6 +18,7 @@ class Coin(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(img, (Settings.TILE_SIZE // 2, Settings.TILE_SIZE // 2))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.og = x
 
 class Healthpotion(pygame.sprite.Sprite):
     def __init__(self, x, y, img_path):
@@ -25,6 +27,7 @@ class Healthpotion(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(img, (Settings.TILE_SIZE // 2, Settings.TILE_SIZE // 2))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.og = x
 
 class Water(pygame.sprite.Sprite):
     def __init__(self, x, y, img_path):
@@ -36,6 +39,7 @@ class Water(pygame.sprite.Sprite):
         self.rect.y = y
         self.move_direction = 1
         self.move_counter = 0
+        self.og = x
 
 class Finish(pygame.sprite.Sprite):
     def __init__(self, x, y, img_path):
@@ -45,3 +49,4 @@ class Finish(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.og = x

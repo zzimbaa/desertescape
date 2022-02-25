@@ -9,6 +9,7 @@ def main():
         #print(1/(game._world.playerList[0].rightSensor/50)) 
         #print((game._world.playerList[0].rightSensor))
         game._world.playerList[0].moving_right = True
+        game._world.playerList[0].jump = True
         print(game._world.playerList[0].sensor(game._world.bg_scroll))
         # if i == 1:
         #     game._world.playerList[0].moving_right = True

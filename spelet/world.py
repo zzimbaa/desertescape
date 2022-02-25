@@ -8,7 +8,7 @@ from .tiles import Tile, Coin, Healthpotion, Water, Finish
 from .world_data import world1_data
 
 class World():
-    def __init__(self, screen, data):
+    def __init__(self, screen, data,time1):
         self.screen = screen
         self.screen_scroll = 0
         self.bg_scroll = 0
@@ -16,14 +16,14 @@ class World():
         self.world_data = data
         self.playerList = []
         self.old_player = None
-        playerA = 1 #Amount of players to create
+        playerA = 20 #Amount of players to create
         for i in range(playerA):
             l = Player(screen, char_type='player', x=300, y=500, scale=0.3, speed=5)
             self.playerList.append(l)
-        self._init_world()
+        self._init_world(time1)
 
-    def _init_world(self):
-        self.game_over_time = time.time() + Settings.PLAY_TIME
+    def _init_world(self,time1):
+        self.game_over_time = time.time() + time1
         self.game_over = False
         self.victory = False
         self.coin_group = pygame.sprite.Group()
@@ -159,27 +159,27 @@ class World():
             self.screen.blit(cloudbg_img, ((i * WIDTH) - self.bg_scroll, 0))
 
         for tile in self.tile_list:
-            tile.rect[0] += self.screen_scroll
+            tile.rect[0] = tile.og - self.bg_scroll
             self.screen.blit(tile.img, tile.rect)
         
         for coin in self.coin_group:
-            coin.rect[0] += self.screen_scroll
+            coin.rect[0] = coin.og - self.bg_scroll
             self.screen.blit(coin.image, coin.rect)
         
         for healpot in self.healpot_group:
-            healpot.rect[0] += self.screen_scroll
+            healpot.rect[0] = healpot.og - self.bg_scroll
             self.screen.blit(healpot.image, healpot.rect)
         
         for movingenemy in self.movingenemy_group:
-            movingenemy.rect[0] += self.screen_scroll
+            movingenemy.rect[0] = movingenemy.og - self.bg_scroll
             self.screen.blit(movingenemy.image, movingenemy.rect)
 
         for water in self.water_group:
-            water.rect[0] += self.screen_scroll
+            water.rect[0] = water.og - self.bg_scroll
             self.screen.blit(water.image, water.rect)
         
         for finish in self.finish_group:
-            finish.rect[0] += self.screen_scroll
+            finish.rect[0] = finish.og - self.bg_scroll
             self.screen.blit(finish.image, finish.rect)
         
         # self.game_over = self.game_over or not self.player.alive
@@ -227,20 +227,25 @@ class World():
             if pygame.sprite.spritecollide(player, self.movingenemy_group, False):
                 player.health = 0
                 player.speed = 0#Lade till
+                player.dx = 0
             if pygame.sprite.spritecollide(player, self.water_group, False):
                 player.health = 0
                 player.speed = 0 #Lade till
+                player.dx = 0
             if pygame.sprite.spritecollide(player, self.finish_group, False):
                 player.victory = True
                 player.speed = 0
-
-            if player.alive:
-                player.update_action()
-                player.move(self.tile_list) # Flyttar faktist inte spelaren i X led utan beräknar bara hur mycket den vill flytta på sig
+                player.dx = 0
+                player.health = 0 #Så att spelaren inte fortsätter efteråt
+                player.completeTime = time.time()
+            player.update_action()
+            player.move(self.tile_list, self.bg_scroll) # Flyttar faktist inte spelaren i X led utan beräknar bara hur mycket den vill flytta på sig
+       
         #SKROLLUPPDATERAR
         #Ta fram spelarna som lever
         alive_players = [x for x in self.playerList if x.alive]
         #Hitta spelaren som är längst fram
+        #PROBLEMET TROR JAG LIGGER I NÄR FLERA SPELARE HOPPAR SAMTIDIGT OCH DEN BYTER PERPSEKTIV FLERA GÅNGER
         if len(alive_players) != 0:
             furthest_player = max(alive_players, key=lambda x: x.pos)
             #Kolla om detta är samma spelare som tidigare 
@@ -251,11 +256,12 @@ class World():
                     player.rect.x += player.dx + self.screen_scroll
             else:
                 if not self.old_player == None:
-                    distance = furthest_player.pos - self.old_player.pos #Teoretiskt borde detta alltid vara positivt men det kanske finns scenarion där det inte är så
+                    distance = furthest_player.rect.centerx - self.old_player.rect.centerx #Teoretiskt borde detta alltid vara positivt men det kanske finns scenarion där det inte är så
+                    #tror det är distance som är problemet när det gäller skrollproblemet
                     #Vi vill nu flytta scrollen som den nya spelaren vill men samtidigt vill vi flytta så den nya spelaren är i center
                     new_scroll = distance + furthest_player.dx
                     self.screen_scroll = -new_scroll
                     self.bg_scroll -= self.screen_scroll
+                    for player in self.playerList: #När vi väl vet hur alla spelare vill flytta sig och vet den spelaren som är längst fram uppdaterar vi allas x position i samband med hur den spelaren längst fram vill ändra skrollen
+                        player.rect.x += player.dx + self.screen_scroll
             self.old_player = furthest_player
-            for player in self.playerList:
-                player.pos = player.getPos(self.bg_scroll)[0]
