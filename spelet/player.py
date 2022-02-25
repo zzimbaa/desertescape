@@ -101,6 +101,8 @@ class Player(pygame.sprite.Sprite):
 
         #Sensor som säger vart närmaste håll/vatten är (Frågan är om man ska hardcoda vart hålen ligger eller ifall man ska beräkna ut det)
         
+        #Gör en ny funktion som beräknar vart alla hållen ligger så det inte behövs göra för varje frame
+        
 
 
     def move(self, tile_list):
