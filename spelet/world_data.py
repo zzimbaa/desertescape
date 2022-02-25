@@ -21,14 +21,16 @@ def hole():
     for i in range(xlevels):#Går igenom varje x nivå
         hole = 0
         if world1_data[ylevels-1][i] == 5: #Eftersom i denna världen så ligger vattnet bara på sista raden vilket betyder att vi bara behöver kolla om det ligger vatten på sista raden
+            test = True 
             for l in range(ylevels-1): #Vi vill inte gå igenom den sista
-                print(l, i)
                 tile = world1_data[l][i]
                 if tile != 0:
                     table.append(hole)
+                    test = False
                     break
-            hole = 1 #Ifall den går igenom hela l-loopen betyder det att det inte finns något över vattnet
-            table.append(hole)
+            if test:
+                hole = 1 #Ifall den går igenom hela l-loopen betyder det att det inte finns något över vattnet
+                table.append(hole)
         else: #Ifall det inte är vatten längst ner är det inget vattenhål
             table.append(hole)
     return table
