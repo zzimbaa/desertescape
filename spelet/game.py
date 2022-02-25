@@ -59,9 +59,9 @@ class Game():
         pygame.init()
         self._screen = pygame.display.set_mode((Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT))
         self._world = None
-        self.moving_left = None
-        self.moving_right = None
-        self.jumping = None
+        #self.moving_left = None
+        #self.moving_right = None
+        #self.jumping = None
         self.world_data = world1_data
         self.menu_enabled = menu
         self.menu = Menu(self._screen) if menu else None
@@ -102,21 +102,21 @@ class Game():
                             self.menu.reset()
                     else:
                         keep_going = False
-                if self._world.victory:
-                    if self.menu_enabled:
-                        self.menu.draw_victory(self._world.player.score)
-                        if self.menu.restart:
-                            self._world.reset_world()
-                            self.menu.reset()
-                    else:
-                        keep_going = False
+                # if self._world.victory:
+                #     if self.menu_enabled:
+                #         self.menu.draw_victory(self._world.player.score)
+                #         if self.menu.restart:
+                #             self._world.reset_world()
+                #             self.menu.reset()
+                #     else:
+                #         keep_going = False
 
                 self._world.update_player()
 
-            self._world.player.moving_left = self.moving_left and not self.moving_right
-            self._world.player.moving_right = self.moving_right
-            self._world.player.jump = self.jumping and self._world.player.alive
+            # self._world.player.moving_left = self.moving_left and not self.moving_right
+            # self._world.player.moving_right = self.moving_right
+            # self._world.player.jump = self.jumping and self._world.player.alive
 
-            yield self.player_pos()
+            yield 1
 
             pygame.display.update()

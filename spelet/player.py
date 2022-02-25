@@ -1,7 +1,8 @@
 import os
 import pygame
 from .settings import Settings
-
+import math
+from .world_data import world1_data
 class Action(object):
 #Character actions
 
@@ -50,6 +51,10 @@ class Player(pygame.sprite.Sprite):
             Action.DEATH: Frames(Action.DEATH, "bilder/cowboyplayer/Death", scale, restart=False)
         }
         self.reset(screen, char_type, x, y, scale, speed)
+        self.rightSensor = 0
+        self.scroll = 0 #Detta är till för att räkna ut spelarens position KANSKE KAN TAS BORT
+        self.pos = 0
+        self.dx = 0
 
     @property
     def health(self):
@@ -66,16 +71,46 @@ class Player(pygame.sprite.Sprite):
             self._health = 0
             self.speed = 0
             self.update_action()
+    
+    def getPos (self, scroll): #Eventuellt kan du ha scrollen här Det ska vara background scroll
+        return (self.rect.x + scroll, self.rect.y)
+
+    def getScore (self):
+        return self.score
+    
+
+    def sensor(self,scroll):
+        
+        ytile = math.floor(self.rect.centery/60) #Ger vilken Y nivå spelaren är på enligt world_data (Ändra 60 till tile_size)
+        xtile = math.floor((self.rect.centerx + scroll)/60)
+        data = world1_data
+        ylevel = data[ytile]
+        #Right sensorn
+        #Gå igenom hur många tiles det är till nästa väg
+        count = 1 #1 betyder alltså att det är ett block precis framför
+        start = xtile + 1 #Börja på tilen framför gubben
+        for i in range(start, len(ylevel)): 
+            tile = ylevel[i]
+            #print(tile)
+            if not (tile in [1,7,9,10,11,12,13,14,15,16,17]): #1 betyder väg
+                count += 1
+            else:
+                break
+        rightsensor = 1/count #Tekniskt sätt kan du göra en optimering så om gubben är på samma y-nivå nästa frame så behövs inte for loopen köras
+        print(rightsensor)
+
+        #Sensor som säger vart närmaste håll/vatten är (Frågan är om man ska hardcoda vart hålen ligger eller ifall man ska beräkna ut det)
+        
+
 
     def move(self, tile_list):
-        dx = 0
+        self.dx = 0
         dy = 0 
-        
         if self.moving_left:
-            dx = -self.speed
+            self.dx = -self.speed
             self.direction = -1
         if self.moving_right:
-            dx = self.speed
+            self.dx = self.speed
             self.direction = 1
             
         # jump
@@ -90,10 +125,19 @@ class Player(pygame.sprite.Sprite):
         dy += self.vel_y
 
         # kollision med tiles
+        self.rightSensor = 10000
         for tile in tile_list:
+            #Sensor
+            if (tile.rect.bottom > self.rect.centery + 20) and (self.rect.centery + 20 > tile.rect.top):
+                if tile.rect.centerx > self.rect.centerx: #ifall den är till höger om spelaren
+                    #print(tile.rect.bottom, tile.rect.top, self.rect.centery)
+                    distance = tile.rect.centerx - self.rect.centerx
+                    if distance < self.rightSensor:
+                        self.rightSensor = distance
             # kollision i x-led
-            if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
-                dx = 0
+            if tile.rect.colliderect(self.rect.x + self.dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
+                self.dx = 0
+                self.wall = True
             #kollision i y-led
             if tile.rect.colliderect(self.rect.x, self.rect.y + dy, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
                 # check if below the ground, i.e jumping
@@ -105,23 +149,26 @@ class Player(pygame.sprite.Sprite):
                     dy = tile.rect.top - self.rect.bottom + Settings.CHARACTER_MARGIN_BOTTOM
                     self.vel_y = 0
                     self.in_air = False
-
-        # rectangle pos
         self.rect.y += dy
-
+        #self.pos = self.getPos(scroll) #Uppdaterar spelaren postion DEtta kanske ska göras efter rect.x ändras?
         #update scroll based on player position
-        if self.char_type == "player":
-
-            if self.moving_right and (self.rect.right > Settings.SCREEN_WIDTH - Settings.SCROLL_THRESH):
-                self.screen_scroll = -dx
-            elif self.moving_left and (self.rect.left < Settings.SCROLL_THRESH):
-                self.screen_scroll = -dx
-            else:
-                self.rect.x += dx
-                self.screen_scroll = 0
-
-            return self.screen_scroll
         
+        
+        #if self.char_type == "player":
+            # if self.moving_right and (self.rect.right > Settings.SCREEN_WIDTH - Settings.SCROLL_THRESH):
+            #     self.screen_scroll = -dx
+            # elif self.moving_left and (self.rect.left < Settings.SCROLL_THRESH):
+            #     self.screen_scroll = -dx
+            #else:
+            
+            #self.screen_scroll = -dx
+
+            #return self.screen_scroll
+
+            #if scroll == 0: #Betyder att vi inte behöver ta hänsyn till skrollen
+            
+            #self.rect.x += self.dx + scroll 
+            
     def update_animation(self):
         # update animation
         ANIMATION_COOLDOWN = 100

@@ -14,7 +14,12 @@ class World():
         self.bg_scroll = 0
         self.font = pygame.font.SysFont("Bauhaus 93", 30)
         self.world_data = data
-        self.player = Player(screen, char_type='player', x=300, y=300, scale=0.5, speed=5)
+        self.playerList = []
+        self.old_player = None
+        playerA = 1 #Amount of players to create
+        for i in range(playerA):
+            l = Player(screen, char_type='player', x=300, y=500, scale=0.3, speed=5)
+            self.playerList.append(l)
         self._init_world()
 
     def _init_world(self):
@@ -177,53 +182,80 @@ class World():
             finish.rect[0] += self.screen_scroll
             self.screen.blit(finish.image, finish.rect)
         
-        self.game_over = self.game_over or not self.player.alive
-        self.victory = self.player.victory
+        # self.game_over = self.game_over or not self.player.alive
+        # self.victory = self.player.victory
+        self.game_over = True
+        for player in self.playerList:
+                if not player.alive or not player.victory: #Ifall någon av spelaren inte har dött eller klarat banan så resetar vi inte
+                    self.game_over = False
 
-        if not self.victory:
-            if not self.game_over:
-                self.movingenemy_group.update()
-                self.coin_group.draw(self.screen)
-                self.healpot_group.draw(self.screen)
-                self.movingenemy_group.draw(self.screen)
-                self.water_group.draw(self.screen)
-            self.finish_group.draw(self.screen)
+        # if not self.victory: Ska inte detta vara igång
+        #     if not self.game_over:
+        #         self.movingenemy_group.update()
+        #         self.coin_group.draw(self.screen)
+        #         self.healpot_group.draw(self.screen)
+        #         self.movingenemy_group.draw(self.screen)
+        #         self.water_group.draw(self.screen)
+        #    self.finish_group.draw(self.screen)
 
         if not self.game_over and not self.victory:
             time_left = int(self.game_over_time - time.time())
             if time_left <= 0:
                 self.game_over = True
-                self.player.health = 0
-                self.screen_scroll = 0
-            text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
-            self.draw_text (text,
-                            self.font,
-                            Settings.BG_COLOR,
-                            Settings.TILE_SIZE,
-                            20)
+                #self.player.health = 0
+                #self.screen_scroll = 0
+                for player in self.playerList:
+                    player.health = 0
+            # text = f'X{self.player.score}' if self.game_over else f'X{self.player.score} {time_left}'
+            # self.draw_text (text,
+            #                 self.font,
+            #                 Settings.BG_COLOR,
+            #                 Settings.TILE_SIZE,
+            #                 20)
 
     def update_player(self):
-        self.player.update_animation()
-        self.player.draw()
+        furthest_player = None
+        for player in self.playerList:
+            player.update_animation() # FÖR LOOP HÄR
+            player.draw()
 
-        #kollision med items
-        if pygame.sprite.spritecollide(self.player, self.coin_group, True):
-            self.player.score += 1
+            #kollision med items
+            if pygame.sprite.spritecollide(player, self.coin_group, True):
+                player.score += 1
 
-        #kollision med enemies
-        if pygame.sprite.spritecollide(self.player, self.movingenemy_group, False):
-            self.player.health = 0
-            self.screen_scroll = 0
+            #kollision med enemies
+            if pygame.sprite.spritecollide(player, self.movingenemy_group, False):
+                player.health = 0
+                player.speed = 0#Lade till
+            if pygame.sprite.spritecollide(player, self.water_group, False):
+                player.health = 0
+                player.speed = 0 #Lade till
+            if pygame.sprite.spritecollide(player, self.finish_group, False):
+                player.victory = True
+                player.speed = 0
 
-        if pygame.sprite.spritecollide(self.player, self.water_group, False):
-            self.player.health = 0
-            self.screen_scroll = 0
-
-        if pygame.sprite.spritecollide(self.player, self.finish_group, False):
-            self.player.victory = True
-            self.player.speed = 0
-
-        if self.player.alive:
-            self.player.update_action()
-            self.screen_scroll = self.player.move(self.tile_list)
-            self.bg_scroll -= self.screen_scroll
+            if player.alive:
+                player.update_action()
+                player.move(self.tile_list) # Flyttar faktist inte spelaren i X led utan beräknar bara hur mycket den vill flytta på sig
+        #SKROLLUPPDATERAR
+        #Ta fram spelarna som lever
+        alive_players = [x for x in self.playerList if x.alive]
+        #Hitta spelaren som är längst fram
+        if len(alive_players) != 0:
+            furthest_player = max(alive_players, key=lambda x: x.pos)
+            #Kolla om detta är samma spelare som tidigare 
+            if furthest_player is self.old_player:
+                self.screen_scroll = -furthest_player.dx
+                self.bg_scroll -= self.screen_scroll
+                for player in self.playerList: #När vi väl vet hur alla spelare vill flytta sig och vet den spelaren som är längst fram uppdaterar vi allas x position i samband med hur den spelaren längst fram vill ändra skrollen
+                    player.rect.x += player.dx + self.screen_scroll
+            else:
+                if not self.old_player == None:
+                    distance = furthest_player.pos - self.old_player.pos #Teoretiskt borde detta alltid vara positivt men det kanske finns scenarion där det inte är så
+                    #Vi vill nu flytta scrollen som den nya spelaren vill men samtidigt vill vi flytta så den nya spelaren är i center
+                    new_scroll = distance + furthest_player.dx
+                    self.screen_scroll = -new_scroll
+                    self.bg_scroll -= self.screen_scroll
+            self.old_player = furthest_player
+            for player in self.playerList:
+                player.pos = player.getPos(self.bg_scroll)[0]
