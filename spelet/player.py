@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
     
 
     def sensor(self,scroll):
-        
+        waterholes = [] #Alla ställen där det är ett hål som leder till vatten 
         ytile = math.floor(self.rect.centery/60) #Ger vilken Y nivå spelaren är på enligt world_data (Ändra 60 till tile_size)
         xtile = math.floor((self.rect.centerx + scroll)/60)
         data = world1_data
@@ -97,14 +97,44 @@ class Player(pygame.sprite.Sprite):
             else:
                 break
         rightsensor = 1/count #Tekniskt sätt kan du göra en optimering så om gubben är på samma y-nivå nästa frame så behövs inte for loopen köras
-        print(rightsensor)
-
-        #Sensor som säger vart närmaste håll/vatten är (Frågan är om man ska hardcoda vart hålen ligger eller ifall man ska beräkna ut det)
-        
-        #Gör en ny funktion som beräknar vart alla hållen ligger så det inte behövs göra för varje frame
         
 
-
+        #Sensor som säger vart närmaste "step-ner" är (10 ex
+        #                                              01)
+        #GÖR BARA DETTA NÄR GRABBEN INTE ÄR I LUFTEN eller om count inte är 1
+        count1 = 0
+        ylevel = data[ytile + 1]
+        if count != 1:
+            count1 = 1 #1 betyder alltså att det är ett block precis framför
+            for i in range(start, start + count): #Kolla på y-nivån under spelaren 
+                tile = ylevel[i]
+                if not (tile == 0): 
+                    count1 += 1
+                else:
+                    break
+        if count1 - 1 == count or count1 == 0:
+            holesensor = 0
+        else:
+            holesensor = 1/count1
+        #Ifall count1 == count så finns det ingen hål emellan
+        
+        
+        #Vattenhålsensor
+        count2 = 1 #1 betyder alltså att det är ett block precis framför 
+        broke = False
+        for i in range(start, len(ylevel)): 
+            tile = waterholes[i]
+            #print(tile)
+            if not (tile == 1): #1 betyder vattenhål
+                count += 1
+            else:
+                broke = True #Används för att veta om den faktiskt hittade ett hål överhuvudtaget
+                break
+        if not broke:
+            watersensor = 0
+        else:
+            watersensor = 1/count2
+        print(rightsensor, holesensor, watersensor)
     def move(self, tile_list):
         self.dx = 0
         dy = 0 
