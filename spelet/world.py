@@ -6,9 +6,9 @@ from .settings import Settings
 from .player import Player, Action, Enemy
 from .tiles import Tile, Coin, Healthpotion, Water, Finish
 from .world_data import world1_data
-
+from .drawNetworkFuncs import * 
 class World():
-    def __init__(self, screen, data,time1):
+    def __init__(self, screen, data,time1, genomes):
         self.screen = screen
         self.screen_scroll = 0
         self.bg_scroll = 0
@@ -19,7 +19,9 @@ class World():
         playerA = 20 #Amount of players to create
         for i in range(playerA):
             l = Player(screen, char_type='player', x=300, y=500, scale=0.3, speed=5)
+            l.network = genomes[i]
             self.playerList.append(l)
+        self.furthest_player = self.playerList[0]
         self._init_world(time1)
 
     def _init_world(self,time1):
@@ -150,11 +152,25 @@ class World():
         self.bg_scroll = 0
         self._init_world()
 
+    def draw_network(self):
+        #Funktionerna ligger i drawNetworkFuncs.py
+        #if 
+        network = self.furthest_player.network.brain
+        height = (0, Settings.SCREEN_HEIGHT/2)
+        width = (5/8 * Settings.SCREEN_WIDTH, Settings.SCREEN_WIDTH)
+        #print(height, width)
+        circles = getRects(network,width,height) #Få värdena på skärmen
+        circles = assign_circle_to_node(circles, network.nodes)
+
+        drawCircles(circles, self.screen)
+        drawLines(network,circles,self.screen)
+        #pygame.draw.circle(self.screen, pygame.Color(255,255,255), (750,330), 100)
+
     def draw(self):
         self.screen.fill(Settings.BG_COLOR)
         cloudbg_img = pygame.image.load(f"bilder/cowboytiles/western.jpg")
         WIDTH = cloudbg_img.get_width()
-
+        
         for i in range(5):
             self.screen.blit(cloudbg_img, ((i * WIDTH) - self.bg_scroll, 0))
 
@@ -212,7 +228,7 @@ class World():
             #                 Settings.BG_COLOR,
             #                 Settings.TILE_SIZE,
             #                 20)
-
+        self.draw_network()
     def update_player(self):
         furthest_player = None
         for player in self.playerList:
@@ -247,7 +263,7 @@ class World():
         #Hitta spelaren som är längst fram
         #PROBLEMET TROR JAG LIGGER I NÄR FLERA SPELARE HOPPAR SAMTIDIGT OCH DEN BYTER PERPSEKTIV FLERA GÅNGER
         if len(alive_players) != 0:
-            furthest_player = max(alive_players, key=lambda x: x.pos)
+            furthest_player = max(alive_players, key=lambda x: x.rect.centerx)
             #Kolla om detta är samma spelare som tidigare 
             if furthest_player is self.old_player:
                 self.screen_scroll = -furthest_player.dx
@@ -265,3 +281,4 @@ class World():
                     for player in self.playerList: #När vi väl vet hur alla spelare vill flytta sig och vet den spelaren som är längst fram uppdaterar vi allas x position i samband med hur den spelaren längst fram vill ändra skrollen
                         player.rect.x += player.dx + self.screen_scroll
             self.old_player = furthest_player
+            self.furthest_player = furthest_player

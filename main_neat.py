@@ -8,6 +8,7 @@ from NEAT import miscFuncs
 from NEAT import node
 from NEAT import player
 from NEAT import species
+from spelet.player import Player
 #from NEAT import miscFuncs
 
 
@@ -18,7 +19,7 @@ def main(genomes,time):
     game = Game()
     #world = game._world
     #players = world.playerList
-    for player_pos in game.run(time):
+    for furthest_player in game.run(time,genomes):
         for nr, genome in enumerate(genomes):
             player = game._world.playerList[nr]
             sensors = {}
