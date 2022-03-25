@@ -10,8 +10,8 @@ from NEAT import player
 from NEAT import species
 from spelet.player import Player
 #from NEAT import miscFuncs
-
-
+from matplotlib import pyplot as plt
+import copy
     
     
 def main(genomes,time):
@@ -36,24 +36,43 @@ def main(genomes,time):
         player = game._world.playerList[nr]
         # increase fitness for advancing in x position
         distance = max((player.rect.centerx + game._world.bg_scroll) - hardcodedstart, 0) #Ifall skillnaden är negativ blir distance = 0
+        player.network = genome
+        player.distance = distance
         genome.fitness = round(distance/60) #Blir nog lättare att beräkna om det är int
         if player.victory:
             genome.fitness += 100
             print(player.completeTime)
-    alive_players = sorted(genomes, key=lambda x: x.fitness, reverse=True)
-    print(alive_players[0].fitness)
-    #Hur ska fitness ges ut
+    best = sorted(game._world.playerList, key=lambda x: x.network.fitness, reverse=True)[0]
+    fitness = best.network.fitness
+    network = copy.deepcopy(best.network)
+    time = best.completeTime
+    playerList = [fitness, network, time]
+    return playerList
+    
 def run():
     p = population.population()
     p.startPopulation()
     Time = 0 #Hur mycket tid de ska få. Efter var femte generation typ så ge lite mer tid
-    for i in range (0,10000):
+    gen = 1 #Vilken Generation den är på
+    bestPlayers = []
+    for i in range (0,2):
         if (i % 10) == 0 and Time != 20:
             Time += 5
-        print(Time)
-        main(p.players,Time)
-        for i in p.players:
-            if i.fitness > 1000:
-                miscFuncs.drawNetwork(i.brain)
+        #print(Time)
+        bestPlayer = main(p.players,Time)
+        bestPlayers.append(bestPlayer)
         p.nextGeneration()
+    drawData(gen, bestPlayers)
+    
+def drawData(gen, bestPlayers):
+    fitnesses = [bestPlayer.network.fitness for bestPlayer in bestPlayers]
+    brains = [bestPlayer.network.brain for bestPlayer in bestPlayers]
+    times = [bestPlayer.completeTime for bestPlayer in bestPlayers]
+    gens = [x+1 for x in range(gen+1)]
+    fitnessGraph = zip(gens, fitnesses)
+    print(gens)
+    print(gens)
+    plt.plot(gens, fitnesses)
+    plt.show()
+
 run()
