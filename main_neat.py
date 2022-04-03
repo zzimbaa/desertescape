@@ -53,26 +53,34 @@ def run():
     p = population.population()
     p.startPopulation()
     Time = 0 #Hur mycket tid de ska få. Efter var femte generation typ så ge lite mer tid
-    gen = 1 #Vilken Generation den är på
+    gen = 0 #Vilken Generation den är på
     bestPlayers = []
-    for i in range (0,2):
-        if (i % 10) == 0 and Time != 20:
+    for i in range (0,40):
+        if (i % 7) == 0 and Time != 20:
             Time += 5
         #print(Time)
         bestPlayer = main(p.players,Time)
         bestPlayers.append(bestPlayer)
         p.nextGeneration()
+        gen += 1
     drawData(gen, bestPlayers)
     
 def drawData(gen, bestPlayers):
-    fitnesses = [bestPlayer.network.fitness for bestPlayer in bestPlayers]
-    brains = [bestPlayer.network.brain for bestPlayer in bestPlayers]
-    times = [bestPlayer.completeTime for bestPlayer in bestPlayers]
-    gens = [x+1 for x in range(gen+1)]
-    fitnessGraph = zip(gens, fitnesses)
+    fitnesses = [bestPlayer[0] for bestPlayer in bestPlayers]
+    brains = [bestPlayer[1].brain for bestPlayer in bestPlayers]
+    times = [bestPlayer[2] for bestPlayer in bestPlayers]
+    gens = [x+1 for x in range(gen)]
+    neurons = [len(network.nodes) for network in brains]
+    connections = [len(network.connections) for network in brains]
     print(gens)
-    print(gens)
+    print(fitnesses)
     plt.plot(gens, fitnesses)
+    plt.show()
+    plt.plot(gens, times)
+    plt.show()
+    plt.plot(gens, neurons)
+    plt.show()
+    plt.plot(gens, connections)
     plt.show()
 
 run()

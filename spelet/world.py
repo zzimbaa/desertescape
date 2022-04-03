@@ -26,6 +26,7 @@ class World():
 
     def _init_world(self,time1):
         self.game_over_time = time.time() + time1
+        self.start_time = time.time()
         self.game_over = False
         self.victory = False
         self.coin_group = pygame.sprite.Group()
@@ -253,7 +254,7 @@ class World():
                 player.speed = 0
                 player.dx = 0
                 player.health = 0 #Så att spelaren inte fortsätter efteråt
-                player.completeTime = time.time()
+                player.completeTime = time.time() - self.start_time
             player.update_action()
             player.move(self.tile_list, self.bg_scroll) # Flyttar faktist inte spelaren i X led utan beräknar bara hur mycket den vill flytta på sig
        
