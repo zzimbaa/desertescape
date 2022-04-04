@@ -14,7 +14,7 @@ class World():
         self.bg_scroll = 0
         self.font = pygame.font.SysFont("Bauhaus 93", 30)
         self.world_data = data
-        self.player = Player(screen, char_type='player', x=300, y=300, scale=0.5, speed=5)
+        self.player = Player(screen, char_type='player', x=300, y=300, scale=0.4, speed=5)
         self._init_world()
 
     def _init_world(self):
