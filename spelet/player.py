@@ -89,26 +89,28 @@ class Player(pygame.sprite.Sprite):
         ylevel = data[ytile]
         #Right sensorn
         #Gå igenom hur många tiles det är till nästa väg
-        count = 1 #1 betyder alltså att det är ett block precis framför
-        start = xtile + 1 #Börja på tilen framför gubben
+        #1 betyder alltså att det är ett block precis framför
+        count = 1 
+        #Börja på tilen framför gubben
+        start = xtile + 1 
         for i in range(start, len(ylevel)): 
             tile = ylevel[i]
-            #print(tile)
-            if not (tile in [1,7,9,10,11,12,13,14,15,16,17]): #1 betyder väg
+            #Ifall Tile inte är en vägg-tile
+            if not (tile in [1,7,9,10,11,12,13,14,15,16,17]): 
                 count += 1
             else:
                 break
-        rightsensor = 1/count #Tekniskt sätt kan du göra en optimering så om gubben är på samma y-nivå nästa frame så behövs inte for loopen köras
+        rightsensor = 1/count 
         
 
-        #Sensor som säger vart närmaste "step-ner" är (10 ex
-        #                                              01)
-        #GÖR BARA DETTA NÄR GRABBEN INTE ÄR I LUFTEN eller om count inte är 1
+        #Sensor som säger vart närmaste "vanligt hål är" är (11011 ex
+        #                                                    11011)
         count1 = 0
         ylevel = data[ytile + 1]
         if count != 1 and not self.in_air and (ytile + 1) != 11:
-            count1 = 1 #1 betyder alltså att det är ett block precis framför
-            for i in range(start, start + count): #Kolla på y-nivån under spelaren 
+            count1 = 1 
+            #Kolla på y-nivån under spelaren 
+            for i in range(start, start + count): 
                 tile = ylevel[i]
                 if not (tile == 0): 
                     count1 += 1
@@ -122,12 +124,13 @@ class Player(pygame.sprite.Sprite):
         
         
         #Vattenhålsensor
-        count2 = 1 #1 betyder alltså att det är ett block precis framför 
+        count2 = 1 
         broke = False
         for i in range(start, len(ylevel)): 
             tile = waterholes[i]
             #print(tile)
-            if not (tile == 1): #1 betyder vattenhål
+            #1 betyder vattenhål (utgå från waterhole matrisen)
+            if not (tile == 1): 
                 count2 += 1
             else:
                 broke = True #Används för att veta om den faktiskt hittade ett hål överhuvudtaget
@@ -136,7 +139,9 @@ class Player(pygame.sprite.Sprite):
             watersensor = 0
         else:
             watersensor = 1/count2
-        if count1 == count2: #Holesensor kommer fortfarande se vattenhål vilket gör att om det är ett vattenhål den detekterar så gör vi så den inte detekterar något alls
+        #Holesensor kommer fortfarande se vattenhål vilket gör att om det är ett vattenhål den
+        #upptäcker gör vi så den inte upptäcker något alls
+        if count1 == count2: 
             holesensor = 0
 
         return (rightsensor,holesensor,watersensor)
@@ -166,16 +171,9 @@ class Player(pygame.sprite.Sprite):
             self.sensors = self.sensor(scroll)
         else:
             self.sensors = (0,0,0)
-        # kollision med tiles
-        #self.rightSensor = 10000
+            
+        #kollision med tiles
         for tile in tile_list:
-            # #Sensor
-            # if (tile.rect.bottom > self.rect.centery + 20) and (self.rect.centery + 20 > tile.rect.top):
-            #     if tile.rect.centerx > self.rect.centerx: #ifall den är till höger om spelaren
-            #         #print(tile.rect.bottom, tile.rect.top, self.rect.centery)
-            #         distance = tile.rect.centerx - self.rect.centerx
-            #         if distance < self.rightSensor:
-            #             self.rightSensor = distance
             # kollision i x-led
             if tile.rect.colliderect(self.rect.x + self.dx, self.rect.y, self.width-Settings.CHARACTER_MARGIN_SIDE, self.height-Settings.CHARACTER_MARGIN_BOTTOM):
                 self.dx = 0
@@ -192,25 +190,7 @@ class Player(pygame.sprite.Sprite):
                     self.vel_y = 0
                     self.in_air = False
         self.rect.y += dy
-        #self.pos = self.getPos(scroll) #Uppdaterar spelaren postion DEtta kanske ska göras efter rect.x ändras?
-        #update scroll based on player position
-        
-        
-        #if self.char_type == "player":
-            # if self.moving_right and (self.rect.right > Settings.SCREEN_WIDTH - Settings.SCROLL_THRESH):
-            #     self.screen_scroll = -dx
-            # elif self.moving_left and (self.rect.left < Settings.SCROLL_THRESH):
-            #     self.screen_scroll = -dx
-            #else:
-            
-            #self.screen_scroll = -dx
 
-            #return self.screen_scroll
-
-            #if scroll == 0: #Betyder att vi inte behöver ta hänsyn till skrollen
-            
-            #self.rect.x += self.dx + scroll 
-            
     def update_animation(self):
         # update animation
         ANIMATION_COOLDOWN = 100

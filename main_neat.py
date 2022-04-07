@@ -12,11 +12,11 @@ from spelet.player import Player
 #from NEAT import miscFuncs
 from matplotlib import pyplot as plt
 import copy
-    
-    
+
 def main(genomes,time):
     hardcodedstart = 270
     game = Game()
+    done = False
     #world = game._world
     #players = world.playerList
     for furthest_player in game.run(time,genomes):
@@ -42,29 +42,52 @@ def main(genomes,time):
         if player.victory:
             genome.fitness += 100
             print(player.completeTime)
+            done = True
     best = sorted(game._world.playerList, key=lambda x: x.network.fitness, reverse=True)[0]
     fitness = best.network.fitness
     network = copy.deepcopy(best.network)
     time = best.completeTime
     playerList = [fitness, network, time]
-    return playerList
+    return playerList, done
     
 def run():
     p = population.population()
     p.startPopulation()
     Time = 0 #Hur mycket tid de ska få. Efter var femte generation typ så ge lite mer tid
     gen = 0 #Vilken Generation den är på
-    bestPlayers = []
-    for i in range (0,40):
-        if (i % 7) == 0 and Time != 20:
-            Time += 5
-        #print(Time)
-        bestPlayer = main(p.players,Time)
-        bestPlayers.append(bestPlayer)
+    #bestPlayers = []
+    bestplayer = None
+    for i in range (0,1000):
+        if (i % 5) == 0 and Time != 25:
+            Time += 7
+        #Kod för data om hur individernas utveckling
+        #bestPlayer, state = main(p.players,Time)
+        #bestPlayers.append(bestPlayer)
+        bestPlayer, state = main(p.players,Time)
+        #Ifall en individ har klarat det sluta loopa
+        if state: 
+            break
         p.nextGeneration()
         gen += 1
-    drawData(gen, bestPlayers)
+    solutionData(gen, bestPlayer)
+
+def solutionData(gens, bestplayer):
+    bestplayer = bestplayer.network
+    neurons = len(bestplayer.nodes) #Ger antal neuroner
+    active_connections = 0 
+    #Ger antalet aktiva gener i lösning
+    for i in bestplayer.connections:
+        if bestplayer.connections[i]:
+            active_connections += 1
+    #printar datan efter lösning hittas
+    print(f"Antal gömda neuroner: {neurons-7}")
+    print(f"Antal aktiverade anslutningar: {active_connections}")
+    print(f"Antal generationer för att hitta en lösning: {gens}")
     
+    
+#Funktion för att skriva ner hur 
+#indviderna lyckades från början till slut
+#Inte särskillt intressant
 def drawData(gen, bestPlayers):
     fitnesses = [bestPlayer[0] for bestPlayer in bestPlayers]
     brains = [bestPlayer[1].brain for bestPlayer in bestPlayers]
@@ -72,15 +95,18 @@ def drawData(gen, bestPlayers):
     gens = [x+1 for x in range(gen)]
     neurons = [len(network.nodes) for network in brains]
     connections = [len(network.connections) for network in brains]
-    print(gens)
-    print(fitnesses)
-    plt.plot(gens, fitnesses)
-    plt.show()
-    plt.plot(gens, times)
-    plt.show()
-    plt.plot(gens, neurons)
-    plt.show()
-    plt.plot(gens, connections)
-    plt.show()
+    #Gör en fil med fitness data
+    with open('fitness.txt', 'x') as f:
+        for item in fitnesses:
+            f.write("%s\n" % item)
+    #Gör en fil med Neuron data
+    with open('neuron.txt', 'x') as f:
+        for item in neurons:
+            f.write("%s\n" % item)
+    #Gör en fil med Neuron data
+    with open('conns.txt', 'x') as f:
+        for item in connections:
+            f.write("%s\n" % item)
+    
 
 run()
