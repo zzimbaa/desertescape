@@ -26,6 +26,8 @@ class World():
         self.movingenemy_group = pygame.sprite.Group()
         self.water_group = pygame.sprite.Group()
         self.finish_group = pygame.sprite.Group()
+        self.tree_group = pygame.sprite.Group()
+        self.bush_group = pygame.sprite.Group()
         self.tile_list = []
         row_count = 0
         for row in self.world_data:
@@ -107,7 +109,7 @@ class World():
                     #coins
                     coin = Coin(col_count * Settings.TILE_SIZE,
                                 row_count * Settings.TILE_SIZE,
-                                f"bilder/items/coingold.png")
+                                f"bilder/items/Gold_1.png")
                     self.coin_group.add(coin)
                 elif cell == 3:
                     healpot = Healthpotion(col_count * Settings.TILE_SIZE,
@@ -128,9 +130,22 @@ class World():
                 elif cell == 6:
                     #mål
                     finish = Finish(col_count * Settings.TILE_SIZE,
-                                row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 2),
-                                f"bilder/items/door.png")
+                                row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 3),
+                                f"bilder/items/Skeleton.png")
                     self.finish_group.add(finish)
+                # elif cell == 20:
+                #     #föremål utan kollision
+                #     tree = Tree(col_count * Settings.TILE_SIZE,
+                #                 row_count * Settings.TILE_SIZE- (Settings.TILE_SIZE),
+                #                 f"bilder/items/Tree.png")
+                #     self.tree_group.add(tree)
+                # elif cell == 21:
+                #     #föremål utan kollision
+                #     bush = Bush(col_count * Settings.TILE_SIZE,
+                #                 row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 2),
+                #                 f"bilder/items/Bush (1).png")
+                #     self.bush_group.add(bush)
+
 
                 col_count += 1
             row_count += 1
@@ -176,6 +191,14 @@ class World():
         for finish in self.finish_group:
             finish.rect[0] += self.screen_scroll
             self.screen.blit(finish.image, finish.rect)
+
+        # for tree in self.tree_group:
+        #     tree.rect[0] += self.screen_scroll
+        #     self.screen.blit(tree.image, tree.rect)
+
+        # for bush in self.bush_group:
+        #     bush.rect[0] += self.screen_scroll
+        #     self.screen.blit(bush.image, bush.rect)
         
         self.game_over = self.game_over or not self.player.alive
         self.victory = self.player.victory
@@ -187,6 +210,8 @@ class World():
                 self.healpot_group.draw(self.screen)
                 self.movingenemy_group.draw(self.screen)
                 self.water_group.draw(self.screen)
+                self.tree_group.draw(self.screen)
+                self.bush_group.draw(self.screen)
             self.finish_group.draw(self.screen)
 
         if not self.game_over and not self.victory:
