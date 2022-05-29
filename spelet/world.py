@@ -4,7 +4,7 @@ import pygame
 from pygame.constants import DROPTEXT
 from .settings import Settings
 from .player import Player, Action, Enemy
-from .tiles import Tile, Coin, Healthpotion, Water, Finish
+from .tiles import Tile, Coin, Healthpotion, Water, Finish, Bush, Tree
 from .world_data import world1_data
 
 class World():
@@ -119,7 +119,7 @@ class World():
                 elif cell == 4:
                     #fiende
                     movingenemy = Enemy(col_count * Settings.TILE_SIZE + 6,
-                                  row_count * Settings.TILE_SIZE + 6)
+                                  row_count * Settings.TILE_SIZE + 6 - (Settings.TILE_SIZE // 8))
                     self.movingenemy_group.add(movingenemy)
                 elif cell == 5:
                     #vatten
@@ -133,20 +133,18 @@ class World():
                                 row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 3),
                                 f"bilder/items/Skeleton.png")
                     self.finish_group.add(finish)
-                # elif cell == 20:
-                #     #föremål utan kollision
-                #     tree = Tree(col_count * Settings.TILE_SIZE,
-                #                 row_count * Settings.TILE_SIZE- (Settings.TILE_SIZE),
-                #                 f"bilder/items/Tree.png")
-                #     self.tree_group.add(tree)
-                # elif cell == 21:
-                #     #föremål utan kollision
-                #     bush = Bush(col_count * Settings.TILE_SIZE,
-                #                 row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 2),
-                #                 f"bilder/items/Bush (1).png")
-                #     self.bush_group.add(bush)
-
-
+                elif cell == 20:
+                    #föremål utan kollision
+                    tree = Tree(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE- (Settings.TILE_SIZE),
+                                f"bilder/items/Tree.png")
+                    self.tree_group.add(tree)
+                elif cell == 21:
+                    #föremål utan kollision
+                    bush = Bush(col_count * Settings.TILE_SIZE,
+                                row_count * Settings.TILE_SIZE - (Settings.TILE_SIZE // 2),
+                                f"bilder/items/Bush (1).png")
+                    self.bush_group.add(bush)
                 col_count += 1
             row_count += 1
     
@@ -192,13 +190,13 @@ class World():
             finish.rect[0] += self.screen_scroll
             self.screen.blit(finish.image, finish.rect)
 
-        # for tree in self.tree_group:
-        #     tree.rect[0] += self.screen_scroll
-        #     self.screen.blit(tree.image, tree.rect)
+        for tree in self.tree_group:
+            tree.rect[0] += self.screen_scroll
+            self.screen.blit(tree.image, tree.rect)
 
-        # for bush in self.bush_group:
-        #     bush.rect[0] += self.screen_scroll
-        #     self.screen.blit(bush.image, bush.rect)
+        for bush in self.bush_group:
+            bush.rect[0] += self.screen_scroll
+            self.screen.blit(bush.image, bush.rect)
         
         self.game_over = self.game_over or not self.player.alive
         self.victory = self.player.victory

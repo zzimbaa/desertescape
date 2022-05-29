@@ -178,7 +178,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        img = pygame.image.load(f"bilder/enemy/Idle/Idle (1).png")
+        img = pygame.image.load(f"bilder/enemy/Idle/blob.png")
         self.image = self.image = pygame.transform.scale(img, (Settings.TILE_SIZE , Settings.TILE_SIZE))
         self.rect = self.image.get_rect()
         self.rect.x = x

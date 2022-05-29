@@ -4,6 +4,13 @@ from .settings import Settings
 from .world_data import world1_data
 from .player import Player
 from .restartgame import Button, ScreenFade
+from pygame import mixer
+
+mixer.init()
+pygame.mixer.music.load("musik/mario.mp3")
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play(-1, 0.0, 0)
+
 
 
 class Menu():
@@ -17,10 +24,10 @@ class Menu():
 
     def reset(self):
         self.restart = False
-        self.fade = ScreenFade(self.screen, 1, Settings.BLACK, 4)
+        self.fade = ScreenFade(self.screen, 1, Settings.BG_COLOR, 4)
 
     def draw_text(self, text, x, y):
-        self.screen.blit(self.font.render(text, True, Settings.BG_COLOR),
+        self.screen.blit(self.font.render(text, True, Settings.BLACK),
                          (x, y))
 
     def draw_main(self):
@@ -39,7 +46,7 @@ class Menu():
         y = Settings.SCREEN_HEIGHT - 400
         self.draw_text(text, x, y)
         if self.restart_button.draw():
-            self.fade = ScreenFade(self.screen, 1, Settings.BLACK, 4)
+            self.fade = ScreenFade(self.screen, 1, Settings.BG_COLOR, 4)
             self.restart = True
 
     def draw_game_over(self):
@@ -49,7 +56,7 @@ class Menu():
         y = Settings.SCREEN_HEIGHT - 500
         self.draw_text(text, x, y)
         if self.restart_button.draw():
-            self.fade = ScreenFade(self.screen, 1, Settings.BLACK, 4)
+            self.fade = ScreenFade(self.screen, 1, Settings.BG_COLOR, 4)
             self.restart = True
 
 
