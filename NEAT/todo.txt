@@ -1,0 +1,5 @@
+Enable/Disable mutation
+
+Remove Node mutation
+
+Gör om node listan till en dict
