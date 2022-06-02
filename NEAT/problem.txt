@@ -1,0 +1,13 @@
+Efter varje gång du kör nätverket måste du cleara alla activationvalues och inputsums
+
+När du ska mutera måste du först köra makeReady sen clearnetwork
+
+#GÅR INTE ATT MUTERA EN NODE MELLAN TVÅ NODES SOM INTE HAR CONNECTION
+
+När man ska mutera in connections behövs ingenting göras men om man ska mutera nodes måste man köra getReady före och efter
+
+Kolla när en connection redan finns vid mutateconnection
+
+Vad ifall du kunde behålla data från förut men bara lägga till. Till exempel vid mutationer så du slipper gå igenom alla connections igen osv.
+
+Resetas fitnessen?
