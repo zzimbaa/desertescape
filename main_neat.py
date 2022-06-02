@@ -9,7 +9,6 @@ from NEAT import node
 from NEAT import player
 from NEAT import species
 from spelet.player import Player
-#from NEAT import miscFuncs
 from matplotlib import pyplot as plt
 import copy
 
@@ -17,8 +16,6 @@ def main(genomes,time):
     hardcodedstart = 270
     game = Game()
     done = False
-    #world = game._world
-    #players = world.playerList
     for furthest_player in game.run(time,genomes):
         for nr, genome in enumerate(genomes):
             player = game._world.playerList[nr]
@@ -38,7 +35,7 @@ def main(genomes,time):
         distance = max((player.rect.centerx + game._world.bg_scroll) - hardcodedstart, 0) #Ifall skillnaden är negativ blir distance = 0
         player.network = genome
         player.distance = distance
-        genome.fitness = round(distance/60) #Blir nog lättare att beräkna om det är int
+        genome.fitness = round(distance/60) 
         if player.victory:
             genome.fitness += 100
             print(player.completeTime)
@@ -48,7 +45,7 @@ def main(genomes,time):
     network = copy.deepcopy(best.network)
     time = best.completeTime
     playerList = [fitness, network, time]
-    return playerList, done
+    return best, done
     
 def run():
     p = population.population()
@@ -59,7 +56,7 @@ def run():
     bestplayer = None
     for i in range (0,1000):
         if (i % 5) == 0 and Time != 25:
-            Time += 7
+            Time += 6
         #Kod för data om hur individernas utveckling
         #bestPlayer, state = main(p.players,Time)
         #bestPlayers.append(bestPlayer)
@@ -72,7 +69,7 @@ def run():
     solutionData(gen, bestPlayer)
 
 def solutionData(gens, bestplayer):
-    bestplayer = bestplayer.network
+    bestplayer = bestplayer.network.brain
     neurons = len(bestplayer.nodes) #Ger antal neuroner
     active_connections = 0 
     #Ger antalet aktiva gener i lösning

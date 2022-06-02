@@ -74,7 +74,7 @@ class Player(pygame.sprite.Sprite):
             self.speed = 0
             self.update_action()
     
-    def getPos (self, scroll): #Eventuellt kan du ha scrollen här Det ska vara background scroll
+    def getPos (self, scroll): 
         return (self.rect.x + scroll, self.rect.y)
 
     def getScore (self):
@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
 
     def sensor(self,scroll):
         waterholes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1] #Alla ställen där det är ett hål som leder till vatten 
-        ytile = math.floor(self.rect.centery/60) #Ger vilken Y nivå spelaren är på enligt world_data (Ändra 60 till tile_size)
+        ytile = math.floor(self.rect.centery/60) #Ger vilken Y nivå spelaren är på enligt world_data 
         xtile = math.floor((self.rect.centerx + scroll)/60)
         data = world1_data
         ylevel = data[ytile]
